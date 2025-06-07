@@ -1,0 +1,27 @@
+-- Set variables for your environment
+--example SET STREAM_DATABASE = 'CORTEX_ANALYST_SEMANTICS_LOCAL';
+SET STREAM_DATABASE = '[YOUR_STREAM_DATABASE]';
+
+SET (streamlit_warehouse)=(SELECT CURRENT_WAREHOUSE());
+
+-- Create Database to host streamlit app
+--CREATE DATABASE IF NOT EXISTS CORTEX_ANALYST_SEMANTICS;→CREATE DATABASE IF NOT EXISTS IDENTIFIER($STREAM_DATABASE);
+CREATE DATABASE IF NOT EXISTS IDENTIFIER($STREAM_DATABASE);
+USE DATABASE IDENTIFIER($STREAM_DATABASE);
+
+-- Create Schema to host streamlit app
+--CREATE SCHEMA IF NOT EXISTS CORTEX_ANALYST_SEMANTICS.SEMANTIC_MODEL_GENERATOR→CREATE SCHEMA IF NOT EXISTS SEMANTIC_MODEL_GENERATOR
+CREATE SCHEMA IF NOT EXISTS SEMANTIC_MODEL_GENERATOR
+COMMENT = '{"origin": "sf_sit",
+            "name": "skimantics",
+            "version": {"major": 2, "minor": 0},
+            "attributes": {"deployment": "sis"}}';
+
+-- Create stage for App logic and 3rd party packages
+--CREATE OR REPLACE STAGE CORTEX_ANALYST_SEMANTICS.SEMANTIC_MODEL_GENERATOR.STREAMLIT_STAGE→CREATE OR REPLACE STAGE SEMANTIC_MODEL_GENERATOR.STREAMLIT_STAGE
+CREATE OR REPLACE STAGE SEMANTIC_MODEL_GENERATOR.STREAMLIT_STAGE
+DIRECTORY = (ENABLE = true)
+COMMENT = '{"origin": "sf_sit",
+            "name": "skimantics",
+            "version": {"major": 2, "minor": 0},
+            "attributes": {"deployment": "sis"}}';
